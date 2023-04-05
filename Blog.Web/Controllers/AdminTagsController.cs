@@ -91,13 +91,22 @@ public class AdminTagsController : Controller
 
 
 
-    [HttpDelete]
+    [HttpPost]
     [ActionName("Delete")]
-    public IActionResult Delete(int id)
+    public IActionResult Delete(EditTagRequest editTagRequest)
     {
+        var tag = _blogDbContext.Tags.Find(editTagRequest.Id);
+        
+        if (tag != null)
+        {
+            _blogDbContext.Tags.Remove(tag);
+            _blogDbContext.SaveChanges();
 
-
-        return RedirectToAction("List");
+            //show success notification
+            return RedirectToAction("List");
+        }
+        //show error notification
+        return RedirectToAction("Edit", new { id = editTagRequest.Id });
     }
 
 }
