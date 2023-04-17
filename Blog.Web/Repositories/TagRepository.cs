@@ -13,7 +13,7 @@ public class TagRepository : ITagRepository
         this.blogDbContext = blogDbContext;
     }
 
-    public async Task<IEnumerable<Tag?>> GetAllAsync()
+    public async Task<IEnumerable<Tag>> GetAllAsync()
     {
         return await blogDbContext.Tags.ToListAsync();
     }
@@ -49,7 +49,7 @@ public class TagRepository : ITagRepository
 
     public async Task<Tag?> DeleteAsync(Guid id)
     {
-        var existingTag = await blogDbContext.Tags.FindAsync();
+        var existingTag = await blogDbContext.Tags.FindAsync(id);
 
         if (existingTag != null)
         {

@@ -46,13 +46,11 @@ public class AdminTagsController : Controller
 
         return View(tags);
     }
-
+    
     [HttpGet]
     [ActionName("Edit")]
     public async Task<IActionResult> Edit(Guid id)
     {
-        //var tag = await _blogDbContext.Tags.FirstOrDefaultAsync(x => x.Id == id);
-
         var tag = await tagRepository.GetAsync(id);
 
         if (tag != null)
@@ -67,6 +65,7 @@ public class AdminTagsController : Controller
         }
         return View(null);
     }
+
     [HttpPost]
     public async Task<IActionResult> Edit(EditTagRequest editTagRequest)
     {
@@ -76,19 +75,9 @@ public class AdminTagsController : Controller
             Name = editTagRequest.Name,
             DisplayName = editTagRequest.DisplayName,
         };
-        //var existingTag = await _blogDbContext.Tags.FindAsync(tag.Id);
 
-        //if (existingTag != null)
-        //{
-        //    existingTag.Name = tag.Name;
-        //    existingTag.DisplayName = tag.DisplayName;
 
-        //    await _blogDbContext.SaveChangesAsync();
-
-        //    return RedirectToAction("List");
-        //}
-
-        var updatedTag = tagRepository.UpdateAsync(tag);
+        var updatedTag = await tagRepository.UpdateAsync(tag);
 
         if (updatedTag != null)
         {
@@ -99,26 +88,14 @@ public class AdminTagsController : Controller
             //show error
         }
 
-        return RedirectToAction("Edit", new { id = editTagRequest.Id });
+        //return RedirectToAction("Edit", new { id = editTagRequest.Id });
+        return RedirectToAction("List");
     }
-
-
 
     [HttpPost]
     [ActionName("Delete")]
     public async Task<IActionResult> Delete(EditTagRequest editTagRequest)
     {
-        //var tag = await _blogDbContext.Tags.FindAsync(editTagRequest.Id);
-        
-        //if (tag != null)
-        //{
-        //    _blogDbContext.Tags.Remove(tag);
-        //    await _blogDbContext.SaveChangesAsync();
-
-        //    //show success notification
-        //    return RedirectToAction("List");
-        //}
-        //show error notification
         var deletedTag = await tagRepository.DeleteAsync(editTagRequest.Id);
 
         if (deletedTag != null)
@@ -129,6 +106,7 @@ public class AdminTagsController : Controller
         
            //fail notification    
         return RedirectToAction("Edit", new { id = editTagRequest.Id });
+        //return RedirectToAction("List");
     }
 
 }
