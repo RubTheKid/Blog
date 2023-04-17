@@ -11,11 +11,11 @@ public class AdminTagsController : Controller
 {
     //constructor creation + injection
     //private readonly BlogDbContext _blogDbContext;
-    private readonly ITagInterface tagInterface;
+    private readonly ITagRepository tagRepository;
 
-    public AdminTagsController(ITagInterface tagRepository)//BlogDbContext blogDbContext)
+    public AdminTagsController(ITagRepository tagRepository)//BlogDbContext blogDbContext)
     {
-    //    _blogDbContext = blogDbContext;
+        this.tagRepository = tagRepository;
     }
 
     [HttpGet]
@@ -28,25 +28,21 @@ public class AdminTagsController : Controller
     [ActionName("Add")]
     public async Task<IActionResult> Add(AddTagRequest addTagRequest)
     {
-        //read input elements (map AddTagRequest to Tag domain model
         var tag = new Tag
         {
             Name = addTagRequest.Name,
             DisplayName = addTagRequest.DisplayName,
         };
 
-        //post in db
-        //await _blogDbContext.Tags.AddAsync(tag);
-        //await _blogDbContext.SaveChangesAsync();
-        await tagInterface.AddAsync(tag);
+        await tagRepository.AddAsync(tag);
         return RedirectToAction("List");
     }
 
     [HttpGet]
     [ActionName("List")]
     public async Task<IActionResult> List()
-    {
-        var tags = await tagInterface.GetAllAsync();
+   {
+        var tags = await tagRepository.GetAllAsync();
 
         return View(tags);
     }
@@ -57,7 +53,7 @@ public class AdminTagsController : Controller
     {
         //var tag = await _blogDbContext.Tags.FirstOrDefaultAsync(x => x.Id == id);
 
-        var tag = await tagInterface.GetAsync(id);
+        var tag = await tagRepository.GetAsync(id);
 
         if (tag != null)
         {
@@ -92,7 +88,7 @@ public class AdminTagsController : Controller
         //    return RedirectToAction("List");
         //}
 
-        var updatedTag = tagInterface.UpdateAsync(tag);
+        var updatedTag = tagRepository.UpdateAsync(tag);
 
         if (updatedTag != null)
         {
@@ -123,7 +119,7 @@ public class AdminTagsController : Controller
         //    return RedirectToAction("List");
         //}
         //show error notification
-        var deletedTag = await tagInterface.DeleteAsync(editTagRequest.Id);
+        var deletedTag = await tagRepository.DeleteAsync(editTagRequest.Id);
 
         if (deletedTag != null)
         {
