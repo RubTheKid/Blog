@@ -80,5 +80,39 @@ public class AdminBlogPostsController : Controller
         return View(blogPosts);
     }
 
+    [HttpGet]
+    [ActionName("Edit")]
+    public async Task<IActionResult> Edit(Guid id)
+    {
+        var blogPost = await blogPostRepository.GetAsync(id);
+        var tagsDomainModel = await tagRepository.GetAllAsync();
+
+        if (blogPost != null)
+        {
+        //map domain model into view model
+        var model = new EditBlogPostRequest
+            {
+                Id = blogPost.Id,
+                Heading = blogPost.Heading,
+                Author = blogPost.Author,
+                PageTitle = blogPost.PageTitle,
+                Content = blogPost.Content,
+                FeaturedImageUrl = blogPost.FeaturedImageUrl,
+                UrlHandle = blogPost.UrlHandle,
+                ShortDescription = blogPost.ShortDescription,
+                PublishedDate = blogPost.PublishedDate,
+                Visible = blogPost.Visible,
+                Tags = tagsDomainModel.Select(x => new SelectListItem
+                {
+                    Text = x.Name,
+                    Value = x.Id.ToString()
+                }),
+                SelectedTags = blogPost.Tags.Select(x => x.Id.ToString()).ToArray(),
+            };
+            return View(model);
+        }
+
+        return View(null);
+    }
 
 }
