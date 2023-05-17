@@ -15,7 +15,6 @@ public class AddBlogPostRequest
     public string Author { get; set; }
     public bool Visible { get; set; }
 
-
     //show all tags in db
     public IEnumerable<SelectListItem> Tags { get; set; }
     //collect tag

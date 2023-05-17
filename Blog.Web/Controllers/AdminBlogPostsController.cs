@@ -115,4 +115,63 @@ public class AdminBlogPostsController : Controller
         return View(null);
     }
 
+    [HttpPost]
+    public async Task<IActionResult> Edit(EditBlogPostRequest editBlogPostRequest)
+    {
+        //map viewmodel back to domainmodel
+        var bpdm = new BlogPost
+        {
+            Id = editBlogPostRequest.Id,
+            Heading = editBlogPostRequest.Heading,
+            PageTitle = editBlogPostRequest.PageTitle,
+            Content = editBlogPostRequest.Content,
+            Author = editBlogPostRequest.Author,
+            ShortDescription = editBlogPostRequest.ShortDescription,
+            FeaturedImageUrl = editBlogPostRequest.FeaturedImageUrl,
+            PublishedDate = editBlogPostRequest.PublishedDate,
+            UrlHandle = editBlogPostRequest.UrlHandle,
+            Visible = editBlogPostRequest.Visible
+        };
+
+        //map tags into domain model
+        var selectedTags = new List<Tag>();
+
+        foreach(var selectedTag in editBlogPostRequest.SelectedTags)
+        {
+            if (Guid.TryParse(selectedTag, out var tag))
+            {
+                var foundTag = await tagRepository.GetAsync(tag);
+
+                if (foundTag != null)
+                {
+                    selectedTags.Add(foundTag);
+                }
+            }
+        }
+
+        bpdm.Tags = selectedTags;
+
+        //submit info to repo to update
+        var updatedBlog = await blogPostRepository.UpdateAsync(bpdm);
+
+        if (updatedBlog != null)
+        {
+            return RedirectToAction("List");
+        }
+        return RedirectToAction("Edit");
+
+    }
+
+    [HttpPost]
+    [ActionName("Delete")]
+    public async Task<IActionResult> Delete(EditBlogPostRequest editBlogPostRequest)
+    {
+        var deletedBlogPost = await blogPostRepository.DeleteAsync(editBlogPostRequest.Id);
+
+        if (deletedBlogPost != null)
+        {
+            return RedirectToAction("List");
+        }
+        return RedirectToAction("Edit", new { id = editBlogPostRequest.Id });
+    }
 }
