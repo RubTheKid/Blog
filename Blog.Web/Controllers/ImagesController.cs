@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Blog.Web.Repositories;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace Blog.Web.Controllers;
 
@@ -7,10 +9,25 @@ namespace Blog.Web.Controllers;
 [ApiController]
 public class ImagesController : ControllerBase
 {
+    private readonly IImageRepository imageRepository;
+
+    public ImagesController(IImageRepository imageRepository)
+    {
+        this.imageRepository = imageRepository;    
+    }
+
     [HttpPost]
     public async Task<IActionResult> UploadAsync(IFormFile file)
     {
-        
+        //call a repo
+        var imageURL = await imageRepository.UploadAsync(file);
+
+        if (imageURL == null)
+        {
+            return Problem("Image upload was not successfull", null, (int)HttpStatusCode.InternalServerError);
+        }
+
+        return new JsonResult(new { link = imageURL });
     }
 
 

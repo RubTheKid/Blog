@@ -33,7 +33,7 @@ public class CloudinaryImageRepository : IImageRepository
 
         if(uploadResult != null && uploadResult.StatusCode == System.Net.HttpStatusCode.OK)
         {
-            return uploadResult.SecureUri.ToString();
+            return uploadResult.SecureUrl.ToString();
         }
         return null;
     }
