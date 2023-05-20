@@ -28,3 +28,10 @@ body {
     max-width: 100%;
 
 }
+
+.table td{
+    color:white;
+}
+.table th {
+    color: white;
+}
