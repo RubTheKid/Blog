@@ -18,8 +18,11 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    background-color: #171717;
+    color: white;
 }
+
 
 .blog-details-content img {
     max-width: 100%;

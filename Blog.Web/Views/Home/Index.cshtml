@@ -47,7 +47,7 @@
             {
                 foreach (var blogPost in Model.BlogPosts)
                 {
-                    <div class="mb-5 bg-light box-shadow p-4" >
+                    <div class="mb-5 bg-light box-shadow p-4 bg-dark text-white">
                         <img src="@blogPost.FeaturedImageUrl" alt="@blogPost.Heading" class="mb-2 d-block img-fluid" />    
                         <h2 class="mb-2">@blogPost.Heading</h2>
                         <p class="mb-4">
@@ -61,9 +61,9 @@
                                 <span class="badge bg-secondary me-1">@tag.Name</span>
                             }
                         </p>
-                        <p class="mb-4">@blogPost.ShortDescription</p> 
-                        <a class="btn btn-dark" 
-                        asp-area=""
+                        <p class="mb-4">@blogPost.ShortDescription</p>
+                        <a class="btn btn-info"
+                   asp-area=""
                         asp-controller="Blogs"
                         asp-action="Index"
                         asp-route-urlHandle="@blogPost.UrlHandle">Read More...</a>
