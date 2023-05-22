@@ -7,12 +7,15 @@ namespace Blog.Web.Controllers;
 public class AccountController : Controller
 {
     private readonly UserManager<IdentityUser> userManager;
-    public AccountController(UserManager<IdentityUser> userManager)
+    private readonly SignInManager<IdentityUser> signInManager;
+
+    public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
     {
         this.userManager = userManager;
+        this.signInManager = signInManager;
     }
 
-    public UserManager<IdentityUser> Usermanager { get; }
+    //public UserManager<IdentityUser> Usermanager { get; }
 
     [HttpGet]
     public IActionResult Register()
@@ -38,12 +41,37 @@ public class AccountController : Controller
 
             if (roleIdentityResult.Succeeded)
             {
-                Console.WriteLine("login successfull");
-                return RedirectToAction("Register");
+                Console.WriteLine("register successfull");
+                return RedirectToAction("Login");
             }
             
         }
         //acrescentar configuração do identity;;;
+        return View();
+    }
+
+
+
+    [HttpGet]
+    public IActionResult Login()
+    {
+        return View();
+    }
+
+
+    [HttpPost]
+    public async Task<IActionResult> Login(LoginViewModel loginViewModel)
+    {
+        var signInResult = await signInManager.PasswordSignInAsync(
+            loginViewModel.Username,
+            loginViewModel.Password,
+            false, false);
+
+        if (signInResult != null && signInResult.Succeeded)
+        {
+            return RedirectToAction("Index", "Home");
+        }
+
         return View();
     }
 }
