@@ -6,16 +6,16 @@ namespace Blog.Web.Data;
 
 public class AuthDbContext : IdentityDbContext
 {
-    public AuthDbContext(DbContextOptions options) : base(options)
+    public AuthDbContext(DbContextOptions<AuthDbContext> options) : base(options)
     {
     }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
-        var AdminId = "642da2b8-7ec9-4e85-978a-a935ea187c3a";
-        var SuperAdminId = "187cd807-b7d4-4d42-9f4a-85b01d3aa4a6";
-        var UserId = "5fb90452-843a-4a57-b35b-42c35292a2a6";
+        var AdminRoleId = "642da2b8-7ec9-4e85-978a-a935ea187c3a";
+        var SuperAdminRoleId = "187cd807-b7d4-4d42-9f4a-85b01d3aa4a6";
+        var UserRoleId = "5fb90452-843a-4a57-b35b-42c35292a2a6";
 
         //papéis (commonuser, admin, superadmin)
         var roles = new List<IdentityRole>
@@ -24,22 +24,22 @@ public class AuthDbContext : IdentityDbContext
             {
                 Name = "Admin",
                 NormalizedName = "Admin",
-                Id = AdminId,
-                ConcurrencyStamp = AdminId
+                Id = AdminRoleId,
+                ConcurrencyStamp = AdminRoleId
             },
             new IdentityRole
             {
                 Name = "SuperAdmin",
                 NormalizedName = "SuperAdmin",
-                Id = SuperAdminId,
-                ConcurrencyStamp = SuperAdminId
+                Id = SuperAdminRoleId,
+                ConcurrencyStamp = SuperAdminRoleId
             },
             new IdentityRole
             {
                 Name = "User",
                 NormalizedName = "User",
-                Id = UserId,
-                ConcurrencyStamp = UserId
+                Id = UserRoleId,
+                ConcurrencyStamp = UserRoleId
             },
         };
 
@@ -53,7 +53,7 @@ public class AuthDbContext : IdentityDbContext
             Email = "superadmin@blog.com",
             NormalizedEmail = "superadmin@blog.com".ToUpper(),
             NormalizedUserName = "superadmin@blog.com".ToUpper(),
-            Id = SuperAdminId
+            Id = superAdminId
         };
 
         superAdminUser.PasswordHash = new PasswordHasher<IdentityUser>()
@@ -67,17 +67,17 @@ public class AuthDbContext : IdentityDbContext
         {
             new IdentityUserRole<string>
             {
-                RoleId = AdminId,
+                RoleId = AdminRoleId,
                 UserId = superAdminId
             },
             new IdentityUserRole<string>
             {
-                RoleId = SuperAdminId,
+                RoleId = SuperAdminRoleId,
                 UserId = superAdminId
             },
             new IdentityUserRole<string>
             {
-                RoleId = UserId,
+                RoleId = UserRoleId,
                 UserId = superAdminId
             }
         };
