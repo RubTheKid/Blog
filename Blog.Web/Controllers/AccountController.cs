@@ -73,7 +73,7 @@ public class AccountController : Controller
         {
             if (string.IsNullOrWhiteSpace(loginViewModel.ReturnUrl))
             {
-                return Redirect(loginViewModel.ReturnUrl);
+                return RedirectToAction("Index","Home");
             }
             return RedirectToAction("Index", "Home");
         }
