@@ -1,9 +1,11 @@
 ﻿using Blog.Web.Models.ViewModels;
 using Blog.Web.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Blog.Web.Controllers;
 
+[Authorize(Roles = "Admin")]
 public class AdminUsersController : Controller
 {
     private IUserRepository userRepository;
