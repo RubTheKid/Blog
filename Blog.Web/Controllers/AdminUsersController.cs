@@ -53,7 +53,7 @@ public class AdminUsersController : Controller
         {
             if (identityResult.Succeeded)
             {
-                var roles = new List<string> { "User" };
+                List<string> roles = new List<string> { "User" };
 
                 if (request.AdminRoleCheckbox)
                 {
