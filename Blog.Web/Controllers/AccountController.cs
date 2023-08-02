@@ -15,7 +15,6 @@ public class AccountController : Controller
         this.signInManager = signInManager;
     }
 
-    //public UserManager<IdentityUser> Usermanager { get; }
 
     [HttpGet]
     public IActionResult Register()

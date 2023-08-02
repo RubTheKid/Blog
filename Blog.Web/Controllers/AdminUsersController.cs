@@ -1,6 +1,7 @@
 ﻿using Blog.Web.Models.ViewModels;
 using Blog.Web.Repositories;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Blog.Web.Controllers;
@@ -9,11 +10,15 @@ namespace Blog.Web.Controllers;
 public class AdminUsersController : Controller
 {
     private IUserRepository userRepository;
+    private readonly UserManager<IdentityUser> userManager;
 
-    public AdminUsersController(IUserRepository userRepository)
+    public AdminUsersController(IUserRepository userRepository, UserManager<IdentityUser> userManager)
     {
         this.userRepository = userRepository;
+        this.userManager = userManager;
     }
+
+    [HttpGet]
     public async Task<IActionResult> List()
     {
         var users = await userRepository.GetAll();
@@ -31,5 +36,39 @@ public class AdminUsersController : Controller
         }
 
         return View(usersViewModel);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> List(UserViewModel request)
+    {
+        var identityUser = new IdentityUser
+        {
+            UserName = request.Username,
+            Email = request.Email
+        };
+
+        var identityResult = await userManager.CreateAsync(identityUser, request.Password);
+
+        if (identityResult is not null)
+        {
+            if (identityResult.Succeeded)
+            {
+                var roles = new List<string> { "User" };
+
+                if (request.AdminRoleCheckbox)
+                {
+                    roles.Add("Admin");
+                }
+
+                identityResult = await userManager.AddToRoleAsync(identityUser, roles);
+
+                if (identityResult is not null && identityResult.Succeeded)
+                {
+                    return RedirectToAction("AdminUsers", "AdminUsers");
+                }
+            }
+        }
+
+        return View();
     }
 }
