@@ -53,14 +53,14 @@ public class AdminUsersController : Controller
         {
             if (identityResult.Succeeded)
             {
-                List<string> roles = new List<string> { "User" };
+                var roles = new List<string> { "User" };
 
                 if (request.AdminRoleCheckbox)
                 {
                     roles.Add("Admin");
                 }
 
-                identityResult = await userManager.AddToRoleAsync(identityUser, roles);
+                identityResult = await userManager.AddToRolesAsync(identityUser, roles);
 
                 if (identityResult is not null && identityResult.Succeeded)
                 {
