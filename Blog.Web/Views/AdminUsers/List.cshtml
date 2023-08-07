@@ -20,7 +20,7 @@
         </div>
 
 
-        @if(Model.Users is not null || !Model.Users.Any())
+        @if(Model.Users is not null || Model.Users.Any())
         {
 
         <table class="table">
@@ -29,6 +29,7 @@
                     <th>Id</th>
                     <th>UserName</th>
                     <th>Email</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -38,6 +39,11 @@
                         <td>@user.Id</td>
                         <td>@user.Username</td>
                         <td>@user.Email</td>
+                        <td>
+                            <form method="post" asp-controller="AdminUsers" asp-action="Delete" asp-route-id="@user.Id">
+                                <button class="btn btn-danger" type="submit">Delete</button>
+                            </form>
+                        </td>
                     </tr>
                 }
             </tbody>

@@ -25,7 +25,7 @@ public class AccountController : Controller
     [HttpPost]
     public async Task<IActionResult> Register(RegisterViewModel registerViewModel)
     {
-        var identityUser = new IdentityUser
+        var identityUser = new IdentityUser()
         {
             UserName = registerViewModel.Username,
             Email = registerViewModel.Email
