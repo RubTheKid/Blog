@@ -11,11 +11,9 @@ namespace Blog.Web.Controllers;
 [Authorize(Roles = "Admin")]
 public class AdminTagsController : Controller
 {
-    //constructor creation + injection
-    //private readonly BlogDbContext _blogDbContext;
     private readonly ITagRepository tagRepository;
 
-    public AdminTagsController(ITagRepository tagRepository)//BlogDbContext blogDbContext)
+    public AdminTagsController(ITagRepository tagRepository)
     {
         this.tagRepository = tagRepository;
     }
@@ -31,6 +29,12 @@ public class AdminTagsController : Controller
     [ActionName("Add")]
     public async Task<IActionResult> Add(AddTagRequest addTagRequest)
     {
+        ValidateAddTagRequest(addTagRequest);
+        if (ModelState.IsValid == false)
+        {
+            return View();
+        }
+
         var tag = new Tag
         {
             Name = addTagRequest.Name,
@@ -110,6 +114,18 @@ public class AdminTagsController : Controller
            //fail notification    
         return RedirectToAction("Edit", new { id = editTagRequest.Id });
         //return RedirectToAction("List");
+    }
+
+
+    private void ValidateAddTagRequest(AddTagRequest addTagRequest)
+    {
+        if (addTagRequest.Name is not null && addTagRequest.DisplayName is not null)
+        {
+            if (addTagRequest.Name == addTagRequest.DisplayName)
+            {
+                ModelState.AddModelError("DisplayName", "Name cannot be the same as DisplayName.");
+            }
+        }
     }
 
 }
